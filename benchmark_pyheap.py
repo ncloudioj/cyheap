@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 
-class miniheap:
+from random import random
+import timeit
+
+class MinHeap:
 	def __init__(self):
 		self.data = []
 		self.len = 0
@@ -67,10 +70,9 @@ class Item(object):
 		return self.price < other.price
 
 def test():
-	from numpy import random
-	heap = miniheap()
+	heap = MinHeap()
 	for i in xrange(100000):
-		heap.insert(Item(i, random.randn()))
+		heap.insert(Item(i, random()))
 	
 	while 1:
 		try:
@@ -79,6 +81,5 @@ def test():
 			break
 
 
-import timeit
-t = timeit.Timer("miniheap.test()", "import miniheap")
+t = timeit.Timer("benchmark_pyheap.test()", "import benchmark_pyheap")
 print "Pure python function, ", t.timeit(1), "secends."

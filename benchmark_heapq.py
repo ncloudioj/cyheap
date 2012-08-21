@@ -1,10 +1,11 @@
 import heapq
+from random import random
+import timeit
 
 def test():
-	from numpy import random
 	heap = []
 	for i in xrange(100000):
-		heapq.heappush(heap, (random.randn(), i))
+		heapq.heappush(heap, (random(), i))
 	
 	while 1:
 		try:
@@ -13,6 +14,5 @@ def test():
 			break
 
 
-import timeit
 t = timeit.Timer("benchmark_heapq.test()", "import benchmark_heapq")
 print "Pure python function, ", t.timeit(1), "secends."

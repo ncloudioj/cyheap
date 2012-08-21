@@ -9,7 +9,10 @@ This project is intended to be a tutorial regarding HOWTO wrap a C library by Cy
     
 cyheap consists of three parts, the minimum heap dynamic library(implemented in C), its python extension(wrapped by Cython), and the related benchmark applications. In addition to the [official tutorial](http://docs.cython.org/src/userguide/tutorial.html), it serves as a moderate example to show how to wrap a C library by Cython, e.g. how to define structures, functions, python extension and take advantage of C libraries.
     
-Through introducing compile-time type information and wrapping the C library by Cython, under the same benchmark environment, cyheap is 30+ times faster than its counterpart, which is implemented in pure Python with same algorithm. Further, it is almost three times faster than the heapq - the standard library of heap in Python.
+Through introducing compile-time type information and wrapping the C library by
+Cython, under the same benchmark environment, cyheap is 40+ times faster than
+its counterpart, which is implemented in pure Python with same algorithm.
+Further, it is almost four times faster than the heapq - the standard library of heap in Python.
     
 Owing to its high performance, [numpy](http://numpy.scipy.org/) has been taking full advantage of Cython to speed up the efficience of modules for scientific computing and other time critical scenarios.
     
