@@ -37,13 +37,11 @@ Note that `sudo make install` will copy the library libminheap.so.1.0.0 to /usr/
     
 Uninstall
 ---------------------------------------------------------------
-    
     `>> make clean`
     
 Usage
 ---------------------------------------------------------------
 1. To run benchmarks.
-    
     * Benchmark of python extension(minheap)
     
       `>>python benchmark_minheap.py`
@@ -57,7 +55,6 @@ Usage
       `>>python benchmark_heapq.py`
       
 2. To use the pyheap.
-    
     `>>python`
     
     `>>>from minheap import MinHeap`
@@ -70,10 +67,9 @@ Usage
     
     `>>>item = heap.pop()`
     
-    Note that peek or pop from a empty heap will raise a IndexError.
+    Note that peek or pop from a empty heap will raise an IndexError.
     
-3. To run the test.
-    
+3. To run the test. 
     * Test the C library.
     
       `>>make test_array`
