@@ -78,7 +78,7 @@ Usage
       
       `>>./test_array`
       
-      `>>./test_array`
+      `>>./test_heap`
     * Test minheap
 
       `>>python test_minheap.py`
