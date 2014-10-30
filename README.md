@@ -1,4 +1,4 @@
-# cyheap - A Moderate Tutorial of Cython
+# cyheap - A Whirlwind Tutorial of Cython
 
 cyheap, a python extension of [minimum heap](http://en.wikipedia.org/wiki/Binary_heap), is originally implemented by C and wrapped to a python extension by Cython.
 
