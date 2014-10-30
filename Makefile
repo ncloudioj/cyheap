@@ -2,7 +2,7 @@
 #
 
 CC = gcc
-CFLAGS = -Wall -O2 -m64
+CFLAGS = -Wall -fPIC -O2 -m64
 OBJS = array.o minheap.o
 TARGET_LIB = libminheap.so
 
