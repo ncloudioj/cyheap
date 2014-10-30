@@ -2,28 +2,28 @@
 #
 
 CC = gcc
-CFLAGS = -Wall -O2
+CFLAGS = -Wall -O2 -m64
 OBJS = array.o minheap.o
+TARGET_LIB = libminheap.so
 
-all: libminheap
+all: libminheap test_heap test_array
 
 libminheap:$(OBJS)
-	$(CC) -shared -fPIC $(CFLAGS) -Wl,-soname,libminheap.so.1 -o libminheap.so.1.0.0 $(OBJS)
+	$(CC) -shared -fPIC $(CFLAGS) -o $(TARGET_LIB) $(OBJS)
 
-test_heap:$(OBJS) test_heap.o
-	$(CC) -o $@ $(CFLAGS) test_heap.c $(OBJS)
+test_heap:$(TARGET_LIB) test_heap.o
+	$(CC) -o $@ $(CFLAGS) test_heap.c $(TARGET_LIB)
 
-test_array:$(OBJS) test_array.o
-	$(CC) -o $@ $(CFLAGS) test_array.c $(OBJS)
+test_array:$(TARGET_LIB) test_array.o
+	$(CC) -o $@ $(CFLAGS) test_array.c $(TARGET_LIB)
 
 %.o:%.c
 	$(CC) -c $(CFLAGS) $<
 
-install: libminheap.so.1.0.0
-	cp $< /usr/lib
+install: $(TARGET_LIB)
+	cp $< /usr/local/lib
 	ldconfig
-	ln -sf /usr/lib/libminheap.so.1 /usr/lib/libminheap.so
 
 .PHONY:clean
 clean:
-	rm -f *.o libminheap.so.1.0.0 test_array test_heap
+	rm -f *.o $(TARGET_LIB) test_array test_heap

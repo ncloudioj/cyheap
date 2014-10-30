@@ -9,7 +9,12 @@ typedef struct {
     struct timeval      time;
 } my_timer_t;
 
-inline void
+static inline void timer_swap(void *, void*);
+static inline void *timer_copy(void *, const void*);
+static inline int timer_cmp(const void*, const void*);
+int id_cmp(const void*, const void*);
+
+static inline void
 timer_swap(void *p, void *q) {
     if (p == q) return;
     
@@ -23,13 +28,13 @@ timer_swap(void *p, void *q) {
     *r = temp;
 }
 
-inline void *
+static inline void *
 timer_copy(void *l, const void *r) {
     *(my_timer_t *)l = *(my_timer_t *)r;
     return l;
 }
 
-inline int
+static inline int
 timer_cmp(const void * l, const void * r) {
     const struct timeval *lt, *rt;
     

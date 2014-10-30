@@ -14,8 +14,9 @@
     } while(0)
 
 
-static void shiftup(minheap_t *heap, int start, int at);
+static void shiftdown(minheap_t *heap, int start, int at);
 static void heapify(minheap_t *heap, int start);
+static void shiftup(minheap_t *heap, int start);
 
 minheap_t *
 minheap_create(uint32_t n, size_t size, compare pfcmp, copy pfcpy, swap pfswp) {
@@ -41,7 +42,6 @@ minheap_free(minheap_t *heap) {
 void    
 minheap_push(minheap_t *heap, const void *new) {
     void *item;
-    int smallest;
 
     if (heap->len == array_len(heap->array)) {
         if ((item=array_push(heap->array)) == NULL) {
@@ -53,8 +53,7 @@ minheap_push(minheap_t *heap, const void *new) {
 
     heap->cpy(item, new);
     heap->len++;
-    smallest = heap->len / 2;
-    shiftup(heap, heap->len-1, smallest);
+    shiftdown(heap, 0, heap->len - 1);
 }
 
 void *
@@ -65,7 +64,7 @@ minheap_pop(minheap_t *heap) {
     
     heap->swp(array_at(heap->array, 0), array_at(heap->array, heap->len-1));
     heap->len--;
-    heapify(heap, 0);
+    shiftup(heap, 0);
     root = array_at(heap->array, heap->len); /* note the previous first elm has been swapped to here. */
     return root;
 }
@@ -76,46 +75,54 @@ minheap_min(minheap_t *heap) {
     return array_at(heap->array, 0);
 }
 
+static void
+shiftdown(minheap_t *heap, int start, int end) {
+    void *child, *parent;
+    int i;  // index for the parent
 
+    i = end;
+    while (end > start) {
+        child = array_at(heap->array, i);
+        i = (end - 1) >> 1;
+        parent = array_at(heap->array, i);
+        if (heap->comp(child, parent) < 0) {
+            heap->swp(child, parent);
+            end = i;
+        } else
+            break;
+    }
+
+    return;
+}
 
 static void
-shiftup(minheap_t *heap, int start, int at) {
-    void *bottom, *top;
-    
-    bottom = array_at(heap->array, start);
-    top = array_at(heap->array, at);
-    if (heap->comp(bottom, top) < 0) {
-        heap->swp(bottom, top);    
-        shiftup(heap, at, at/2);
+shiftup(minheap_t *heap, int start) {
+    int iend, istart, ichild, iright;
+
+    iend = (int)heap->len;
+    istart = start;
+    ichild = 2 * istart + 1;
+    while (ichild < iend) {
+        iright = ichild + 1;
+        if (iright < iend && heap->comp(array_at(heap->array, ichild),
+                    array_at(heap->array, iright)) > 0) {
+            ichild = iright;
+        }
+        heap->swp(array_at(heap->array, istart), array_at(heap->array, ichild));
+        istart = ichild;
+        ichild = 2 * istart + 1;
     }
+    shiftdown(heap, start, istart);
+    return ;
 }
 
 static void
 heapify(minheap_t *heap, int start) {
-    int left, right, smallest;
-    void *t, *tsmallest;
+    int i;
 
-    if (heap->len <= 1) return;
-
-    left = 2*(start+1) - 1;
-    right = left + 1;
-    smallest = start;
-    if (left <= heap->len-1) {
-        tsmallest = array_at(heap->array, smallest);
-        t = array_at(heap->array, left);
-        if (heap->comp(tsmallest, t) > 0) {
-            smallest = left;
-        }
+    i = (int)(heap->len >> 2);
+    for (; i >=0; i--) {
+        shiftup(heap, i);
     }
-    if (right <= heap->len-1) {
-        tsmallest = array_at(heap->array, smallest);
-        t = array_at(heap->array, right);
-        if (heap->comp(tsmallest, t) > 0) {
-            smallest = right;
-        }
-    }
-    if (smallest != start) {
-        heap->swp(array_at(heap->array, smallest), array_at(heap->array, start));
-        heapify(heap, smallest);
-    }
+    return;
 }
