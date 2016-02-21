@@ -1,35 +1,28 @@
-#include <stdlib.h>
-#include <stdio.h>
-#include <sys/time.h>
 #include "array.h"
 #include "minheap.h"
 
-#define MINHEAP_OK        0
-#define MINHEAP_ERROR     1
-
-#define MINHEAP_MEM_ERROR                     \
-    do {                                      \
-        perror("memory error in minheap");    \
-        exit(MINHEAP_ERROR);                  \
-    } while(0)
+#include <stdlib.h>
 
 
 static void shiftdown(minheap_t *heap, int start, int at);
 static void heapify(minheap_t *heap, int start);
 static void shiftup(minheap_t *heap, int start);
 
-minheap_t *
+struct minheap_t *
 minheap_create(uint32_t n, size_t size, compare pfcmp, copy pfcpy, swap pfswp) {
     minheap_t *heap;
 
-    heap = (minheap_t*)malloc(sizeof(minheap_t));
-    if (heap == NULL) MINHEAP_MEM_ERROR;
+    heap = malloc(sizeof(minheap_t));
+    if (heap == NULL) return NULL;
     heap->comp = pfcmp;
     heap->cpy = pfcpy;
     heap->swp = pfswp;
     heap->len = 0;
     heap->array = array_create(n, size);
-    if (heap->array == NULL) MINHEAP_MEM_ERROR;
+    if (heap->array == NULL) {
+		free(heap);
+		return NULL;
+    }
     return heap;
 }
 
@@ -39,13 +32,13 @@ minheap_free(minheap_t *heap) {
     free(heap);
 }
 
-void    
+int    
 minheap_push(minheap_t *heap, const void *new) {
     void *item;
 
     if (heap->len == array_len(heap->array)) {
         if ((item=array_push(heap->array)) == NULL) {
-            MINHEAP_MEM_ERROR;
+            return -1;
         }
     } else {
         item = array_at(heap->array, heap->len);
@@ -54,6 +47,7 @@ minheap_push(minheap_t *heap, const void *new) {
     heap->cpy(item, new);
     heap->len++;
     shiftdown(heap, 0, heap->len - 1);
+    return 0;
 }
 
 void *
@@ -113,7 +107,7 @@ shiftup(minheap_t *heap, int start) {
         ichild = 2 * istart + 1;
     }
     shiftdown(heap, start, istart);
-    return ;
+    return;
 }
 
 static void

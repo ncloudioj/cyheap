@@ -1,3 +1,4 @@
+#include <assert.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h>
@@ -78,9 +79,9 @@ main(int argc, char **argv) {
 
     ntest++;
     heap = minheap_create(0, sizeof(my_timer_t), id_cmp, timer_copy, timer_swap );
-    for(i=0; i<50000; i++) {
+    for(i=0; i<500; i++) {
         gettimeofday(&now, NULL);
-        timer.id = 60000-i;
+        timer.id = 600-i;
         timer.time = now;
         //timer.time.tv_sec -= i;
         minheap_push(heap, &timer);
@@ -89,7 +90,9 @@ main(int argc, char **argv) {
     }
 
     my_timer_t * pop;
+    int should_be = 101;
     while((pop=minheap_pop(heap)) != NULL){
+    	assert(should_be++ == pop->id);
         fprintf(stdout, "current timer id:%d\n", pop->id);
     }
 

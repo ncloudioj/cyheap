@@ -56,7 +56,23 @@ main(int argc, char **argv) {
     }
     array_free(arr);
 
+    ntest++;
+    fprintf(stdout, "Testing ARRAY_AT\n");
+    arr = array_create(2,sizeof(struct client_t));
+    if (arr == NULL) nfailure++;
+    for (i = 0; i < 7; i++) {
+        pclient = (struct client_t *)array_push(arr);
+        pclient->id = i;
+        pclient->name = 'a'+(char)i;
+        pclient->digits[0] = pclient->digits[1] = pclient->digits[2] = 1.23f + i;
+        at = (struct client_t*)ARRAY_AT(arr,i);
+        fprintf(stdout, "id:%d, name:%c, digit1:%.2f, digit2:%.2f, digit:%.2f\n",
+                at->id, at->name, at->digits[0], at->digits[1], at->digits[2]);
+    }
+    array_free(arr);
+
     /* test 4: test for array_push_n */
+	fprintf(stdout, "testing array_at.\n");
     ntest++;
     int j;
     arr = array_create(2,sizeof(struct client_t));

@@ -22,7 +22,6 @@ test_array:$(TARGET_LIB) test_array.o
 
 install: $(TARGET_LIB)
 	cp $< /usr/local/lib
-	ldconfig
 
 .PHONY:clean
 clean:
